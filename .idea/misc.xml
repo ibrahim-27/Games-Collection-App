@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/HP/AndroidStudioProjects/BooksApp/app/src/main/res/drawable/selector_fav.xml" value="0.205" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/BooksApp/app/src/main/res/layout/activity_game_deatil.xml" value="0.25" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/BooksApp/app/src/main/res/layout/activity_main.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/BooksApp/app/src/main/res/layout/book_sample.xml" value="0.20416666666666666" />

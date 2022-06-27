@@ -2,6 +2,7 @@ package com.example.booksapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.CheckBox
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -17,16 +18,18 @@ import com.google.firebase.ktx.Firebase
 
 /** Global Variables **/
 lateinit var currGame:Game
+var gameList = ArrayList<Game>()
+lateinit var adapter:gameAdapter
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), gameAdapter.OnItemClick {
     lateinit var binding:ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        var gameList = ArrayList<Game>()
-        var adapter = gameAdapter(gameList, this)
+
+        adapter = gameAdapter(gameList, this, this)
 
         val database = Firebase.database
         var myRef = database.getReference("Games")
@@ -93,5 +96,20 @@ class MainActivity : AppCompatActivity() {
 //            this@MainActivity.startActivity(i)
 //        }
 
+    }
+
+    override fun onItemClick(pos: Int) {
+        currGame = gameList.get(pos)
+
+        val i = Intent(this, GameDeatil::class.java)
+        this.startActivity(i)
+        Toast.makeText(this, currGame.title, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onFavClick(currBtn: CheckBox, pos: Int) {
+        if(currBtn.isChecked)
+            currBtn.setButtonDrawable(R.drawable.filled_heart)
+        else
+            currBtn.setButtonDrawable(R.drawable.heart)
     }
 }
