@@ -19,6 +19,7 @@ import com.google.firebase.ktx.Firebase
 /** Global Variables **/
 lateinit var currGame:Game
 var gameList = ArrayList<Game>()
+var favList = ArrayList<Game>()
 lateinit var adapter:gameAdapter
 
 class MainActivity : AppCompatActivity(), gameAdapter.OnItemClick {
@@ -62,7 +63,8 @@ class MainActivity : AppCompatActivity(), gameAdapter.OnItemClick {
                             release_date,
                             short_description,
                             thumbnail,
-                            title
+                            title,
+                            false
                         )
                     )
                 }
@@ -103,13 +105,23 @@ class MainActivity : AppCompatActivity(), gameAdapter.OnItemClick {
 
         val i = Intent(this, GameDeatil::class.java)
         this.startActivity(i)
-        Toast.makeText(this, currGame.title, Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, currGame.title, Toast.LENGTH_SHORT).show()
     }
 
     override fun onFavClick(currBtn: CheckBox, pos: Int) {
-        if(currBtn.isChecked)
+        if(currBtn.isChecked){
+            favList.add(gameList.get(pos))
+            gameList.get(pos).isFav = true
             currBtn.setButtonDrawable(R.drawable.filled_heart)
-        else
+            //Toast.makeText(this, pos.toString(), Toast.LENGTH_SHORT).show()
+        }
+        else{
+            favList.remove(gameList.get(pos))
+            gameList.get(pos).isFav = false
             currBtn.setButtonDrawable(R.drawable.heart)
+            //Toast.makeText(this, pos.toString(), Toast.LENGTH_SHORT).show()
+        }
+
+
     }
 }

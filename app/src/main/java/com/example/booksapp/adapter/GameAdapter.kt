@@ -23,8 +23,10 @@ class gameAdapter(var games: ArrayList<Game>, var context: Context, val onItemCl
         val btn: CheckBox = itemView.findViewById(R.id.favBtn)
 
         init {
+            /** When an item is clicked on recycler view **/
             itemView.setOnClickListener(){onItemClick.onItemClick(adapterPosition)}
-            btn.setOnClickListener(){onItemClick.onFavClick(btn, adapterPosition)}
+            /** When fav button is clicked on recycler view **/
+            btn.setOnClickListener(){onItemClick.onFavClick(this.btn, adapterPosition)}
         }
     }
 
@@ -40,19 +42,12 @@ class gameAdapter(var games: ArrayList<Game>, var context: Context, val onItemCl
         Glide.with(context).load(game.thumbnail).into(holder.img);
         holder.name.setText(game.title.toString())
 
-//        if(game.isFav)
-//        {
-//            holder.btn.setButtonDrawable(R.drawable.filled_heart)
-//        }
-
-//        holder.img.setOnClickListener()
-//        {
-//            //Toast.makeText(context, game.developer, Toast.LENGTH_SHORT).show()
-//            currGame = games.get(position)
-//
-//            val i = Intent(context, GameDeatil::class.java)
-//            context.startActivity(i)
-//        }
+        /** As the recycler view uses the same view but different data,
+            so the isFav attribute should be cheked **/
+        if(game.isFav)
+        { holder.btn.setButtonDrawable(R.drawable.filled_heart) }
+        else
+        { holder.btn.setButtonDrawable(R.drawable.heart) }
 
     }
 

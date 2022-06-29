@@ -12,6 +12,7 @@ class Game {
     var short_description: String?
     var thumbnail: String?
     var title: String?
+    var isFav: Boolean = false
 
     constructor(
         developer: String?,
@@ -24,7 +25,8 @@ class Game {
         release_date: String?,
         short_description: String?,
         thumbnail: String?,
-        title: String?
+        title: String?,
+        isFav:Boolean
     ) {
         this.developer = developer
         this.freetogame_profile_url = freetogame_profile_url
@@ -37,5 +39,6 @@ class Game {
         this.short_description = short_description
         this.thumbnail = thumbnail
         this.title = title
+        this.isFav = isFav
     }
 }
