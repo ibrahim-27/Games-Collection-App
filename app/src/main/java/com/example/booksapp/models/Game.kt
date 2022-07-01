@@ -1,5 +1,6 @@
 package com.example.booksapp.models
 
+/** Game item class - with constructor **/
 class Game {
     var developer: String?
     var freetogame_profile_url: String?

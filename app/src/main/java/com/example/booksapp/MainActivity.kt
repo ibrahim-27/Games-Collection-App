@@ -1,6 +1,7 @@
 package com.example.booksapp
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.CheckBox
 import android.widget.Toast
@@ -15,6 +16,9 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.lang.reflect.Type
 
 /** Global Variables **/
 lateinit var currGame:Game
@@ -29,12 +33,9 @@ class MainActivity : AppCompatActivity(), gameAdapter.OnItemClick {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-        adapter = gameAdapter(gameList, this, this)
-
+        /** Getting data from firebase **/
         val database = Firebase.database
         var myRef = database.getReference("Games")
-
         myRef.addValueEventListener(object: ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -68,7 +69,7 @@ class MainActivity : AppCompatActivity(), gameAdapter.OnItemClick {
                         )
                     )
                 }
-
+                loadData()
                 binding.recyclerView.adapter = adapter
             }
 
@@ -78,50 +79,86 @@ class MainActivity : AppCompatActivity(), gameAdapter.OnItemClick {
 
         })
 
-
-        //Toast.makeText(this, gameList.size.toString(), Toast.LENGTH_SHORT).show()
-
-
+        adapter = gameAdapter(gameList, this, this)
         binding.recyclerView.adapter = adapter
-
-        /** For linear layout **/
-        /* var linearLayout = LinearLayoutManager(this)
-           binding.recyclerView.layoutManager = linearLayout */
 
         /** For grid layout **/
         var gridLayout = GridLayoutManager(this, 2)
         binding.recyclerView.layoutManager = gridLayout
 
-//        binding.recyclerView.setOnClickListener()
-//        {
-//            val i = Intent(this@MainActivity, GameDeatil::class.java)
-//            this@MainActivity.startActivity(i)
-//        }
 
     }
 
+    /** Functions to handle recyclerview events **/
+    // When an item is clicked
     override fun onItemClick(pos: Int) {
         currGame = gameList.get(pos)
 
         val i = Intent(this, GameDeatil::class.java)
         this.startActivity(i)
-        //Toast.makeText(this, currGame.title, Toast.LENGTH_SHORT).show()
     }
 
+
+    // When the favourite button is clicked
     override fun onFavClick(currBtn: CheckBox, pos: Int) {
         if(currBtn.isChecked){
-            favList.add(gameList.get(pos))
             gameList.get(pos).isFav = true
+            favList.add(gameList.get(pos))
             currBtn.setButtonDrawable(R.drawable.filled_heart)
-            //Toast.makeText(this, pos.toString(), Toast.LENGTH_SHORT).show()
+            saveData()
         }
         else{
-            favList.remove(gameList.get(pos))
+
+            // removing the game from favourites
+            for(i in 0..favList.size-1)
+            {
+                if(favList[i].id == gameList[pos].id){
+                    favList.removeAt(i)
+                    break
+                }
+            }
+
             gameList.get(pos).isFav = false
             currBtn.setButtonDrawable(R.drawable.heart)
-            //Toast.makeText(this, pos.toString(), Toast.LENGTH_SHORT).show()
+            saveData()
         }
 
+    }
 
+    /** Functions related to SharedPreference **/
+    // Loading data from SharedPreference - loading the favList items
+    fun loadData()
+    {
+        var sp = applicationContext.getSharedPreferences("DATA", MODE_PRIVATE)
+        var gson = Gson()
+        var json:String? = sp.getString("FavList", "")
+        var type: Type = object: TypeToken<ArrayList<Game>>() {}.type
+        if (json != null) {
+            if(json.isEmpty())
+                return
+        }
+        favList = gson.fromJson(json, type)
+
+        // setting all fav item's isFav true
+        for (i in gameList)
+        {
+            for (j in favList)
+            {
+                if(i.id == j.id)
+                    i.isFav = true
+            }
+        }
+    }
+
+    // Saving data in SharedPreference - saving the favList items
+    fun saveData()
+    {
+        var sp = applicationContext.getSharedPreferences("DATA", MODE_PRIVATE)
+        var editor = sp.edit()
+        editor.clear()
+        var gson = Gson()
+        var json:String = gson.toJson(favList)
+        editor.putString("FavList", json)
+        editor.apply()
     }
 }

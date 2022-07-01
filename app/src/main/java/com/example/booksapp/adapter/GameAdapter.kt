@@ -45,7 +45,10 @@ class gameAdapter(var games: ArrayList<Game>, var context: Context, val onItemCl
         /** As the recycler view uses the same view but different data,
             so the isFav attribute should be cheked **/
         if(game.isFav)
-        { holder.btn.setButtonDrawable(R.drawable.filled_heart) }
+        {
+            holder.btn.setButtonDrawable(R.drawable.filled_heart)
+            holder.btn.isChecked = true
+        }
         else
         { holder.btn.setButtonDrawable(R.drawable.heart) }
 
@@ -55,7 +58,7 @@ class gameAdapter(var games: ArrayList<Game>, var context: Context, val onItemCl
         return games.size
     }
 
-    /** Interface for onclick **/
+    /** Interface for onclick functions related to recyclerView**/
     interface OnItemClick
     {
         fun onItemClick(pos:Int)
