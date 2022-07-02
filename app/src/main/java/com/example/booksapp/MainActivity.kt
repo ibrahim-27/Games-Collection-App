@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity(), gameAdapter.OnItemClick {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar?.hide()
 
         /** Getting data from firebase **/
         val database = Firebase.database
@@ -86,6 +87,20 @@ class MainActivity : AppCompatActivity(), gameAdapter.OnItemClick {
         var gridLayout = GridLayoutManager(this, 2)
         binding.recyclerView.layoutManager = gridLayout
 
+
+        binding.showFav.setOnClickListener()
+        {
+            if (binding.showFav.isChecked)
+            {
+                adapter.games = favList
+                binding.recyclerView.adapter = adapter
+            }
+            else
+            {
+                adapter.games = gameList
+                binding.recyclerView.adapter = adapter
+            }
+        }
 
     }
 
