@@ -124,16 +124,33 @@ class MainActivity : AppCompatActivity(), gameAdapter.OnItemClick {
         }
         else{
 
-            // removing the game from favourites
-            for(i in 0..favList.size-1)
+            // if the button is clicked when only favourites are shown
+            if(binding.showFav.isChecked)
             {
-                if(favList[i].id == gameList[pos].id){
-                    favList.removeAt(i)
-                    break
+                favList.get(pos).isFav = false
+                for (i in 0..gameList.size - 1)
+                {
+                    if(favList[pos].id == gameList[i].id){
+                        gameList[i].isFav = false
+                        break
+                    }
                 }
+
+                favList.removeAt(pos)
+                binding.recyclerView.adapter = adapter
+            }
+            else{
+                // removing the game from favourites
+                for(i in 0..favList.size-1)
+                {
+                    if(favList[i].id == gameList[pos].id){
+                        favList.removeAt(i)
+                        break
+                    }
+                }
+                gameList.get(pos).isFav = false
             }
 
-            gameList.get(pos).isFav = false
             currBtn.setButtonDrawable(R.drawable.heart)
             saveData()
         }
